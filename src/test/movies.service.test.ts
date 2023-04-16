@@ -47,4 +47,62 @@ describe('MoviesService', () => {
       }
     });
   })
+
+  describe("deleteOne",()=>{
+    it("delete a movie", ()=>{
+      service.create({
+        title : "TEST MOVIE",
+        genres : ['test'],
+        year : 2000,
+      })
+      const allMovies = service.getAll().length;
+      service.deleteOne(1)
+      const afterDelete = service.getAll().length;
+      expect(afterDelete).toBeLessThan(allMovies)
+    })
+
+    it("should throw 404 Error ", function() {
+      try{
+        service.getOne(999);
+      }catch (e){
+        expect(e).toBeInstanceOf(NotAcceptableException);
+      }
+    });
+  })
+
+  describe("create",()=>{
+    it("should create a movie", ()=> {
+      const beforeCreate = service.getAll().length
+      service.create({
+        title: "TEST MOVIE",
+        genres: ['test'],
+        year: 2000,
+      })
+      const afterCreate = service.getAll().length
+      console.log(beforeCreate,afterCreate)
+      expect(afterCreate).toBeGreaterThan(beforeCreate)
+    })
+    it("should throw a NotFoundException ", function() {
+      try{
+        service.getOne(999);
+      }catch (e){
+        expect(e).toBeInstanceOf(NotAcceptableException);
+      }
+    });
+  })
+
+  describe("update",()=>{
+    it("sholud update a movie" ,()=>{
+      service.create({
+        title: "TEST MOVIE",
+        genres: ['test'],
+        year: 2000,
+      })
+    service.update(1,{title:'UpdateTest'});
+    const movie = service.getOne(1)
+    expect(movie.title).toEqual('UpdateTest')
+
+    })
+  })
 });
+
